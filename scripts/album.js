@@ -50,16 +50,15 @@ var createSongRow = function(songNumber, songName, songLength) {
           currentSongFromAlbum = currentAlbum.songs[songNumber - 1];
           updatePlayerBarSong();
         } else if (currentlyPlayingSongNumber === songNumber) {
-          // Switch from Pause -> Play button to pause currently playing song.
-          if (currentSoundFile.isPaused()) {
+            if (currentSoundFile.isPaused()) {
                 $(this).html(pauseButtonTemplate);
                 $('.main-controls .play-pause').html(playerBarPauseButton);
                 currentSoundFile.play();
-            } else {
+              } else {
                 $(this).html(playButtonTemplate);
                 $('.main-controls .play-pause').html(playerBarPlayButton);
                 currentSoundFile.pause();
-            }
+              }
         }
       };
 
@@ -177,6 +176,18 @@ var previousSong = function() {
     $lastSongNumberCell.html(lastSongNumber);
 };
 
+var togglePlayFromPlayerBar = function() {
+  if (currentSoundFile.isPaused()) {
+    $playerButton.html(playerBarPauseButton);
+    getSongNumberCell(currentlyPlayingSongNumber).html(pauseButtonTemplate);
+    currentSoundFile.play();
+  } else {
+    $playerButton.html(playerBarPlayButton);
+    getSongNumberCell(currentlyPlayingSongNumber).html(playButtonTemplate);
+    currentSoundFile.pause();
+  }
+}
+
 // Album button templates
 var playButtonTemplate = '<a class="album-song-button"><span class="ion-play"></span></a>';
 var pauseButtonTemplate = '<a class="album-song-button"><span class="ion-pause"></span></a>';
@@ -190,9 +201,11 @@ var currentSoundFile = null;
 var currentVolume = 80;
 var $previousButton = $('.main-controls .previous');
 var $nextButton = $('.main-controls .next');
+var $playerButton = $('.main-controls .play-pause');
 
  $(document).ready(function() {
      setCurrentAlbum(albumPicasso);
      $previousButton.click(previousSong);
      $nextButton.click(nextSong);
+     $playerButton.click(togglePlayFromPlayerBar);
   });
